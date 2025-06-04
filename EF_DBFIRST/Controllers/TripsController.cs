@@ -24,4 +24,5 @@ public class TripsController : ControllerBase
         var response = await _tripsService.GetAllTrips(page, pageSize, token);
         return Ok(response);
     }
+    
 }

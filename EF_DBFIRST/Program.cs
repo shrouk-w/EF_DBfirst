@@ -30,6 +30,7 @@ public class Program
         
         //registering dependencies
         builder.Services.AddScoped<ITripsService, TripsService>();
+        builder.Services.AddScoped<IClientService, ClientService>();
         
         
 
