@@ -7,4 +7,5 @@ public interface ITripsService
 {
     
     public Task<object> GetAllTrips(int page, int pageSize, CancellationToken token);
+    public Task AssignClientToTrip(int id, AssignClientToTripRequestDTO dto, CancellationToken token);
 }

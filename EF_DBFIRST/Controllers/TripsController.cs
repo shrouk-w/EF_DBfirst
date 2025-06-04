@@ -19,10 +19,18 @@ public class TripsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> getAllTrips(CancellationToken token,int page = 1, int pageSize = 10)
+    public async Task<IActionResult> GetAllTrips(CancellationToken token,int page = 1, int pageSize = 10)
     {
         var response = await _tripsService.GetAllTrips(page, pageSize, token);
         return Ok(response);
+    }
+
+    [HttpPost("{id}/clients")]
+    public async Task<IActionResult> AssignClientToTrip(int id, [FromBody] AssignClientToTripRequestDTO dto,
+        CancellationToken token)
+    {
+        await _tripsService.AssignClientToTrip(id, dto, token);
+        return Ok();
     }
     
 }

@@ -15,6 +15,9 @@ public class ClientService : IClientService
     
     public async Task DeleteClient(CancellationToken token, int id)
     {
+        if(id < 1)
+            throw new BadRequestException("Id must be greater than 0");
+        
         var client = await _context.Clients
             .Where(c => c.IdClient == id)
             .FirstOrDefaultAsync(token);

@@ -1,4 +1,6 @@
 ﻿using EF_DBFIRST.DAL;
+using EF_DBFIRST.Exceptions;
+using EF_DBFIRST.Models;
 using EF_DBFIRST.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,5 +58,56 @@ public class TripsService : ITripsService
                                 .ToListAsync(token);
         
         return response;
+    }
+
+    public async Task AssignClientToTrip(int id, AssignClientToTripRequestDTO dto, CancellationToken token)
+    {
+        if(id < 1)
+            throw new BadRequestException("Id must be greater than 0");
+        
+        Client client;
+
+        var existingClient = await _context.Clients
+            .FirstOrDefaultAsync(c => c.Pesel == dto.Pesel, token);
+
+        if (existingClient == null)
+        {
+            client = new Client
+            {
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                Telephone = dto.Telephone,
+                Pesel = dto.Pesel
+            };
+
+            await _context.Clients.AddAsync(client, token);
+            await _context.SaveChangesAsync(token);
+        }
+        else
+        {
+            client = existingClient;
+        }
+        
+        bool alreadyAssigned = await _context.ClientTrips
+            .AnyAsync(ct => ct.IdClient == client.IdClient && ct.IdTrip == id, token);
+
+        if (alreadyAssigned)
+        {
+            throw new ConflictException("Client is already assigned to this trip.");
+        }
+
+        ClientTrip ct = new ClientTrip()
+        {
+            IdClient = client.IdClient,
+            IdTrip = id,
+            PaymentDate = dto.PaymentDate,
+            RegisteredAt = DateTime.Now,
+        };
+        
+        await _context.ClientTrips.AddAsync(ct, token);
+        
+        await _context.SaveChangesAsync(token);
+
     }
 }
