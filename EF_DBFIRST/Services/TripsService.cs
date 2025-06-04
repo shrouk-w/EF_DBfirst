@@ -65,6 +65,13 @@ public class TripsService : ITripsService
         if(id < 1)
             throw new BadRequestException("Id must be greater than 0");
         
+        Trip trip = await _context.Trips.FindAsync(id);
+        if(trip == null)
+            throw new NotFoundException("Trip not found");
+        
+        if(trip.DateFrom < DateTime.Now)
+            throw new BadRequestException("trip date cannot be in the past");
+        
         Client client;
 
         var existingClient = await _context.Clients
