@@ -19,7 +19,7 @@ public class Program
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         
-        builder.Services.AddDbContext<TripsDbContext>(opt =>
+        builder.Services.AddDbContext<TripsContext>(opt =>
         {
             opt.UseSqlServer(connectionString)
                 .EnableSensitiveDataLogging()
