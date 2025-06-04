@@ -1,5 +1,6 @@
 using EF_DBFIRST.DAL;
 using EF_DBFIRST.Middlewares;
+using EF_DBFIRST.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -28,7 +29,7 @@ public class Program
         
         
         //registering dependencies
-        //builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
+        builder.Services.AddScoped<ITripsService, TripsService>();
         
         
 
